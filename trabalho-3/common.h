@@ -142,3 +142,13 @@ void assignCellValue(float **readingGrid, float **writingGrid, int i, int j)
     writingGrid[i][j] = 1.0;
   }
 }
+
+int ceil(double number)
+{
+  int aux = (int)number;
+  if (number > aux)
+  {
+    return aux + 1;
+  }
+  return aux;
+}
