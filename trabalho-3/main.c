@@ -11,8 +11,7 @@
 #include <omp.h>
 #include <time.h>
 #include <stdlib.h>
-#define GENERATIONS 50
-#define DIMENSION 2048
+#define GENERATIONS 1
 
 // MPI_Send definition
 // int MPI_Send(const void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm)
@@ -80,7 +79,7 @@ int getAliveCells(float **grid)
   return sum;
 }
 
-void masterPlay(float **readingGrid, float **writingGrid)
+void masterPlay(float **readingGrid, float **writingGrid, int numProcesses)
 {
   int aux = 0;
   int i, j;
@@ -153,7 +152,7 @@ void masterProcess(int numProcesses)
 
   fillZeros(readingGrid);
   initializeGrid(readingGrid);
-  masterPlay(readingGrid, writingGrid);
+  masterPlay(readingGrid, writingGrid, numProcesses);
 }
 
 int main(void)
