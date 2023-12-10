@@ -1,24 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h> 
-#define DIMENSION 50
+#define DIMENSION 2048
 
 typedef struct
 {
   int number;
   float avg;
 } Neighbors;
-
-void fillZeros(float **grid)
-{
-    int i, j;
-    for (i = 0; i < DIMENSION; i++)
-    {
-        for (j = 0; j < DIMENSION; j++)
-        {
-            grid[i][j] = 0.0;
-        }
-    }
-}
 
 // Funcao que inicializa o primeiro
 // tabuleiro do jogo.

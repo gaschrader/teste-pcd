@@ -7,7 +7,25 @@
 #include "mpi_utils.h"
 #include <time.h>
 #include <stdlib.h>
-#define GENERATIONS 5
+#define GENERATIONS 2000
+
+void sendZeros(float **grid, int ini, int end)
+{
+  int i, j;
+
+  for (i = ini; i < end; i++)
+  {
+    for (j = 0; j < DIMENSION; j++)
+      grid[i][j] = 0.0;
+
+    MPI_Send(grid[i], DIMENSION, MPI_FLOAT, 0, 0, MPI_COMM_WORLD);
+  }
+}
+
+void receiveZeros(float **grid, int numProcesses)
+{
+  receiveGridFromWorkers(grid, numProcesses);
+}
 
 // Funcao que retorna o numero de celulas
 // vivas no tabuleiro.
@@ -34,6 +52,7 @@ void workerProcess(int processId, int numProcesses)
   int aux = 0;
   int i, j, ini, end;
   calculateOffset(processId, numProcesses, &ini, &end);
+  sendZeros(readingGrid, ini, end);
 
   while (aux < GENERATIONS)
   {
@@ -59,7 +78,7 @@ void masterProcess(int numProcesses)
   float **readingGrid = mallocGrid();
   float **writingGrid = mallocGrid();
 
-  fillZeros(readingGrid);
+  receiveZeros(readingGrid, numProcesses);
   initializeGrid(readingGrid);
 
   while (aux < GENERATIONS)
