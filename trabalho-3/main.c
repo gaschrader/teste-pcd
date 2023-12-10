@@ -11,7 +11,7 @@
 #include <omp.h>
 #include <time.h>
 #include <stdlib.h>
-#define GENERATIONS 1
+#define GENERATIONS 5
 
 // MPI_Send definition
 // int MPI_Send(const void *buf, int count, MPI_Datatype datatype, int dest, int tag, MPI_Comm comm)
@@ -79,20 +79,6 @@ int getAliveCells(float **grid)
   return sum;
 }
 
-void masterPlay(float **readingGrid, float **writingGrid, int numProcesses)
-{
-  int aux = 0;
-  int i, j;
-
-  while (aux < GENERATIONS)
-  {
-    sendGridToWorkers(readingGrid, numProcesses);
-    receiveGridFromWorkers(writingGrid, numProcesses);
-    swap(&readingGrid, &writingGrid);
-    aux++;
-  }
-}
-
 void workerPlay(float **readingGrid, float **writingGrid, int processId, int numProcesses)
 {
   int aux = 0;
@@ -138,7 +124,7 @@ void masterProcess(int numProcesses)
   float **readingGrid = (float **)malloc(DIMENSION * sizeof(float *));
   float **writingGrid = (float **)malloc(DIMENSION * sizeof(float *));
 
-  int i;
+  int i, aux = 0;
   for (i = 0; i < DIMENSION; i++)
   {
     readingGrid[i] = (float *)malloc(DIMENSION * sizeof(float));
@@ -151,7 +137,15 @@ void masterProcess(int numProcesses)
 
   fillZeros(readingGrid);
   initializeGrid(readingGrid);
-  masterPlay(readingGrid, writingGrid, numProcesses);
+  
+  while (aux < GENERATIONS)
+  {
+    sendGridToWorkers(readingGrid, numProcesses);
+    receiveGridFromWorkers(writingGrid, numProcesses);
+    swap(&readingGrid, &writingGrid);
+    printf("Numero de celulas vivas: %d\n", getAliveCells(readingGrid));
+    aux++;
+  }
 }
 
 int main(void)
