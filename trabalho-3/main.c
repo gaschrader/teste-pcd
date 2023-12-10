@@ -26,8 +26,11 @@ int getAliveCells(float **grid)
   return sum;
 }
 
-void workerPlay(float **readingGrid, float **writingGrid, int processId, int numProcesses)
+void workerProcess(int processId, int numProcesses)
 {
+  float **readingGrid = mallocGrid();
+  float **writingGrid = mallocGrid();
+
   int aux = 0;
   int i, j, ini, end;
   calculateOffset(processId, numProcesses, &ini, &end);
@@ -45,14 +48,6 @@ void workerPlay(float **readingGrid, float **writingGrid, int processId, int num
     sendGridToMaster(writingGrid, processId, ini, end);
     aux++;
   }
-}
-
-void workerProcess(int processId, int numProcesses)
-{
-  float **readingGrid = mallocGrid();
-  float **writingGrid = mallocGrid();
-
-  workerPlay(readingGrid, writingGrid, processId, numProcesses);
 }
 
 void masterProcess(int numProcesses)
