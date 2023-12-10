@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h> 
 #define DIMENSION 50
 
 typedef struct
@@ -160,3 +161,16 @@ void calculateOffset(int processId, int numProcesses, int *ini, int *end)
   *ini = div * (processId - 1);
   *end = div * processId < DIMENSION ? div * processId : DIMENSION;
 }
+
+ float **mallocGrid()
+ {
+  float **grid = (float **)malloc(DIMENSION * sizeof(float *));
+
+  int i;
+  for (i = 0; i < DIMENSION; i++)
+  {
+    grid[i] = (float *)malloc(DIMENSION * sizeof(float));
+  }
+
+  return grid;
+ }

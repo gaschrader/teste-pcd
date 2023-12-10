@@ -49,42 +49,21 @@ void workerPlay(float **readingGrid, float **writingGrid, int processId, int num
 
 void workerProcess(int processId, int numProcesses)
 {
-  float **readingGrid = (float **)malloc(DIMENSION * sizeof(float *));
-  float **writingGrid = (float **)malloc(DIMENSION * sizeof(float *));
-
-  int i;
-  for (i = 0; i < DIMENSION; i++)
-  {
-    readingGrid[i] = (float *)malloc(DIMENSION * sizeof(float));
-  }
-
-  for (i = 0; i < DIMENSION; i++)
-  {
-    writingGrid[i] = (float *)malloc(DIMENSION * sizeof(float));
-  }
+  float **readingGrid = mallocGrid();
+  float **writingGrid = mallocGrid();
 
   workerPlay(readingGrid, writingGrid, processId, numProcesses);
 }
 
 void masterProcess(int numProcesses)
 {
-  float **readingGrid = (float **)malloc(DIMENSION * sizeof(float *));
-  float **writingGrid = (float **)malloc(DIMENSION * sizeof(float *));
-
-  int i, aux = 0;
-  for (i = 0; i < DIMENSION; i++)
-  {
-    readingGrid[i] = (float *)malloc(DIMENSION * sizeof(float));
-  }
-
-  for (i = 0; i < DIMENSION; i++)
-  {
-    writingGrid[i] = (float *)malloc(DIMENSION * sizeof(float));
-  }
+  int aux = 0;
+  float **readingGrid = mallocGrid();
+  float **writingGrid = mallocGrid();
 
   fillZeros(readingGrid);
   initializeGrid(readingGrid);
-  
+
   while (aux < GENERATIONS)
   {
     sendGridToWorkers(readingGrid, numProcesses);
