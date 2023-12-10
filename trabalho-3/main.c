@@ -11,11 +11,11 @@
 
 // Funcao que retorna o numero de celulas
 // vivas no tabuleiro.
-int getAliveCells(float **grid)
+int getAliveCells(float **grid, int ini, int end)
 {
   int sum = 0;
   int i, j;
-  for (i = 0; i < DIMENSION; i++)
+  for (i = ini; i < end; i++)
   {
     for (j = 0; j < DIMENSION; j++)
     {
@@ -48,11 +48,14 @@ void workerProcess(int processId, int numProcesses)
     sendGridToMaster(writingGrid, processId, ini, end);
     aux++;
   }
+
+  int sum = getAliveCells(writingGrid, ini, end);
+  sendAliveCellsToMaster(sum);
 }
 
 void masterProcess(int numProcesses)
 {
-  int aux = 0;
+  int sum = 0, aux = 0;
   float **readingGrid = mallocGrid();
   float **writingGrid = mallocGrid();
 
@@ -64,9 +67,11 @@ void masterProcess(int numProcesses)
     sendGridToWorkers(readingGrid, numProcesses);
     receiveGridFromWorkers(writingGrid, numProcesses);
     swap(&readingGrid, &writingGrid);
-    printf("Numero de celulas vivas: %d\n", getAliveCells(readingGrid));
     aux++;
   }
+
+  getAliveCellsFromWorkers(&sum);
+  printf("Numero de celulas vivas: %d\n", sum);
 }
 
 int main(void)
