@@ -152,3 +152,12 @@ int ceil(double number)
   }
   return aux;
 }
+
+void calculateOffset(int processId, int numProcesses, int *ini, int *end)
+{
+  int ini, end, numWorkers, div;
+  numWorkers = numProcesses - 1;
+  div = ceil(DIMENSION / (double)numWorkers);
+  *ini = div * (processId - 1);
+  *end = div * processId < DIMENSION ? div * processId : DIMENSION;
+}

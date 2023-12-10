@@ -31,6 +31,29 @@ void sendGridToWorkers(float **readingGrid, int numProcesses)
   }
 }
 
+void sendGridToMaster(float **writingGrid, int processId, int ini, int end)
+{
+  int i;
+  for (i = ini; i < end; i++)
+  {
+    MPI_Send(writingGrid[i], DIMENSION, MPI_FLOAT, 0, 0, MPI_COMM_WORLD);
+  }
+}
+
+void receiveGridFromWorkers(float **writingGrid, int numProcesses)
+{
+  int i, j, ini, end;
+
+  for (i = 1; i < numProcesses; i++)
+  {
+    calculateOffset(i, numProcesses, &ini, &end);
+    for (j = ini; j < end; j++)
+    {
+      MPI_Recv(writingGrid[j], DIMENSION, MPI_FLOAT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    }
+  }
+}
+
 void receiveGridFromMaster(float **readingGrid)
 {
   int i;
@@ -38,15 +61,6 @@ void receiveGridFromMaster(float **readingGrid)
   {
     MPI_Recv(readingGrid[i], DIMENSION, MPI_FLOAT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
   }
-}
-
-void calculateOffset(int processId, int numProcesses, int *ini, int *end)
-{
-  int ini, end, numWorkers, div;
-  numWorkers = numProcesses - 1;
-  div = ceil(DIMENSION / (double)numWorkers);
-  *ini = div * (processId - 1);
-  *end = div * processId < DIMENSION ? div * processId : DIMENSION;
 }
 
 // Funcao que retorna o numero de celulas
