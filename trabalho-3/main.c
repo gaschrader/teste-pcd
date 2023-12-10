@@ -130,7 +130,6 @@ void workerProcess(int processId, int numProcesses)
     writingGrid[i] = (float *)malloc(DIMENSION * sizeof(float));
   }
 
-  receiveGridFromMaster(readingGrid);
   workerPlay(readingGrid, writingGrid, processId, numProcesses);
 }
 
