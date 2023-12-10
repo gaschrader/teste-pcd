@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "mpi.h"
 #define DIMENSION 50
 
 typedef struct
