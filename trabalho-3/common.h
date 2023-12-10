@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "mpi.h"
-#define DIMENSION 2048
+#define DIMENSION 50
 
 typedef struct
 {
@@ -155,7 +155,7 @@ int ceil(double number)
 
 void calculateOffset(int processId, int numProcesses, int *ini, int *end)
 {
-  int ini, end, numWorkers, div;
+  int numWorkers, div;
   numWorkers = numProcesses - 1;
   div = ceil(DIMENSION / (double)numWorkers);
   *ini = div * (processId - 1);
